@@ -17,7 +17,7 @@
       text-align: center;
     }
     .btn {
-      margin-top: 20px;
+      margin-top: 10px;
       display: block;
       width: 100%;
       line-height: 40px;
@@ -35,12 +35,21 @@
       color: #fff;
       background: #000;
     }
+    .tip {
+      margin-top: 10px;
+      padding: 10px;
+      background: #E6A23C;
+      text-align: center;
+      color: #fff;
+      font-size: 14px;
+    }
   </style>
 </head>
 <body>
   <div class="avatar" id="js-avatar">
     <canvas class="canvas" id="js-canvas" height="300" width="300"></canvas>
   </div>
+  <div class="tip hide" id="js-tip">请长按图片保存</div>
   <label for="upload" class="btn">
     上传头像
     <input class="hide" type="file" name="file" id="upload" onchange="uploadFile(this)">
@@ -48,6 +57,7 @@
   <button class="convert-btn" onclick="convert()">转换为黑白</button>
   <script>
     const btn = document.getElementById('js-button')
+    const tip = document.getElementById('js-tip')
     const canvas = document.getElementById('js-canvas')
     const ctx = canvas.getContext('2d')
 
@@ -81,12 +91,14 @@
     }
     function hideCanvas () {
       canvas.classList.add('hide')
+      tip.classList.remove('hide')
     }
     function showCanvas () {
       canvas.classList.remove('hide')
       if (document.getElementById('js-img')) {
         document.getElementById('js-img').remove()
       }
+      tip.classList.add('hide')
     }
   </script>
 </body>
