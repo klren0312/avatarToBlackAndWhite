@@ -3,17 +3,18 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
+  <title>头像转为黑白</title>
   <style>
     .hide {
       display: none;
     }
     .avatar {
-      text-align: center;
-    }
-    .canvas {
+      width: 300px;
+      height: 300px;
       padding: 10px;
+      margin: auto;
       border: 1px solid #dfdfdf;
+      text-align: center;
     }
     .btn {
       margin-top: 20px;
@@ -37,8 +38,8 @@
   </style>
 </head>
 <body>
-  <div class="avatar">
-    <canvas class="canvas" id="js-avatar" height="300" width="300"></canvas>
+  <div class="avatar" id="js-avatar">
+    <canvas class="canvas" id="js-canvas" height="300" width="300"></canvas>
   </div>
   <label for="upload" class="btn">
     上传头像
@@ -47,10 +48,11 @@
   <button class="convert-btn" onclick="convert()">转换为黑白</button>
   <script>
     const btn = document.getElementById('js-button')
-    const canvas = document.getElementById('js-avatar')
+    const canvas = document.getElementById('js-canvas')
     const ctx = canvas.getContext('2d')
 
     function uploadFile (e) {
+      showCanvas()
       const img = e.files[0]
       const url = URL.createObjectURL(img)
       const image = new Image()
@@ -58,10 +60,10 @@
       image.onload = function () {
         ctx.drawImage(image, 0, 0, 300, 300)
       }
+      e.value = null
     }
     function convert () {
       const imgData = ctx.getImageData(0, 0, 300, 300)
-      console.log(imgData)
       const data = imgData.data
       for (var i = 0; i < data.length; i += 4) {
         const average = (data[i + 0] + data[i + 1] + data[i + 2] + data[i + 3]) / 3
@@ -70,6 +72,21 @@
         data[i + 2] = average // 蓝
       }
       ctx.putImageData(imgData, 0, 0)
+      const afterURL = canvas.toDataURL('image/png')
+      const img = document.createElement('img')
+      img.setAttribute('id', 'js-img')
+      img.src = afterURL
+      document.getElementById('js-avatar').appendChild(img)
+      hideCanvas()
+    }
+    function hideCanvas () {
+      canvas.classList.add('hide')
+    }
+    function showCanvas () {
+      canvas.classList.remove('hide')
+      if (document.getElementById('js-img')) {
+        document.getElementById('js-img').remove()
+      }
     }
   </script>
 </body>
