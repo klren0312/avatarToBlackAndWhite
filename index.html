@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    .hide {
+      display: none;
+    }
+    .avatar {
+      text-align: center;
+    }
+    .canvas {
+      padding: 10px;
+      border: 1px solid #dfdfdf;
+    }
+    .btn {
+      margin-top: 20px;
+      display: block;
+      width: 100%;
+      line-height: 40px;
+      text-align: center;
+      font-size: 14px;
+      color: #fff;
+      background: #062a5e;
+    }
+    .convert-btn {
+      margin-top: 10px;
+      width: 100%;
+      line-height: 40px;
+      border: 0;
+      font-size: 14px;
+      color: #fff;
+      background: #000;
+    }
+  </style>
+</head>
+<body>
+  <div class="avatar">
+    <canvas class="canvas" id="js-avatar" height="300" width="300"></canvas>
+  </div>
+  <label for="upload" class="btn">
+    上传头像
+    <input class="hide" type="file" name="file" id="upload" onchange="uploadFile(this)">
+  </label>
+  <button class="convert-btn" onclick="convert()">转换为黑白</button>
+  <script>
+    const btn = document.getElementById('js-button')
+    const canvas = document.getElementById('js-avatar')
+    const ctx = canvas.getContext('2d')
+
+    function uploadFile (e) {
+      const img = e.files[0]
+      const url = URL.createObjectURL(img)
+      const image = new Image()
+      image.src = url
+      image.onload = function () {
+        ctx.drawImage(image, 0, 0, 300, 300)
+      }
+    }
+    function convert () {
+      const imgData = ctx.getImageData(0, 0, 300, 300)
+      console.log(imgData)
+      const data = imgData.data
+      for (var i = 0; i < data.length; i += 4) {
+        const average = (data[i + 0] + data[i + 1] + data[i + 2] + data[i + 3]) / 3
+        data[i + 0] = average // 红
+        data[i + 1] = average // 绿
+        data[i + 2] = average // 蓝
+      }
+      ctx.putImageData(imgData, 0, 0)
+    }
+  </script>
+</body>
+</html>
